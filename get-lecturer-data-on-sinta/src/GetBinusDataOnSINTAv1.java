@@ -102,6 +102,7 @@ public class GetBinusDataOnSINTAv1 {
 	        startPage++;
 		}
 		System.out.print("====================================================\nEND CRAWLING\n====================================================\n");
-        fw.close();
+        
+		fw.close();
 	}
 }
