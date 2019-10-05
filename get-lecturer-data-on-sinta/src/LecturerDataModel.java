@@ -1,9 +1,16 @@
 public class LecturerDataModel {
 	private String idSinta;
-	private String namaDosen;
 	private String nidnDosen;
+	private String namaDosen;
+	private String scopusDocument;
+	private String scopusCitation;
 	private String scopusHIndex;
-	private String googleHIndex; 
+	private String scopusI10Index;	
+
+	private String googleHIndex;
+
+	private String bookTotal;
+	private String intellectualProperty;
 
 	public String getIdSinta() {
 		return idSinta;
@@ -34,5 +41,35 @@ public class LecturerDataModel {
 	}
 	public void setScopusHIndex(String scopusHIndex) {
 		this.scopusHIndex = scopusHIndex;
+	}
+	public String getScopusDocument() {
+		return scopusDocument;
+	}
+	public void setScopusDocument(String scopusDocument) {
+		this.scopusDocument = scopusDocument;
+	}
+	public String getScopusCitation() {
+		return scopusCitation;
+	}
+	public void setScopusCitation(String scopusCitation) {
+		this.scopusCitation = scopusCitation;
+	}
+	public String getScopusI10Index() {
+		return scopusI10Index;
+	}
+	public void setScopusI10Index(String scopusI10Index) {
+		this.scopusI10Index = scopusI10Index;
+	}
+	public String getBookTotal() {
+		return bookTotal;
+	}
+	public void setBookTotal(String bookTotal) {
+		this.bookTotal = bookTotal;
+	}
+	public String getIntellectualProperty() {
+		return intellectualProperty;
+	}
+	public void setIntellectualProperty(String intellectualProperty) {
+		this.intellectualProperty = intellectualProperty;
 	}
 }

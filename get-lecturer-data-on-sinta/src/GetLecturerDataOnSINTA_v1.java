@@ -2,7 +2,7 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 
-public class GetLecturerDataOnSINTA {
+public class GetLecturerDataOnSINTA_v1 {
 	public static void main(String[] args) throws Exception {
 		// GET DATE FOR FILE NAME
 		Date today = new Date();
@@ -16,24 +16,26 @@ public class GetLecturerDataOnSINTA {
 
 		// NECESSARY VARIABLES 
 		boolean isAvailable = true;
-		int startIndex = 0, endIndex = 0, pageNumber = 1;
-		String inputLine = null, finalResult = null;
+		int startIndex = 0, endIndex = 0;
+		String inputLine = null, finalResult = null, tempString = null;
 		LecturerDataModel newLecturer = new LecturerDataModel();
+		URL linkURL;
 
     	// FILL THIS
     	int universityID = 388;
+    	int startPage = 1;
   		
 		// NAMA KOLOM
-		String columnName = new String("ID SINTA;NAMA DOSEN;NIDN/NIP/NIDK;SCOPUS H-INDEX;GOOGLE H-INDEX");
+		String columnName = new String("ID SINTA;NIDN/NIP/NIDK;NAMA DOSEN;SCOPUS H-INDEX;GOOGLE H-INDEX");
 		System.out.println(columnName);
     	fw.write(columnName + "\n");
 		
 		while(isAvailable == true) {
 			isAvailable = false;
 
-			URL oracle = new URL("http://sinta2.ristekdikti.go.id/affiliations/detail?page="+pageNumber+"&view=authors&id="+universityID);
+			linkURL = new URL("http://sinta2.ristekdikti.go.id/affiliations/detail?page="+startPage+"&view=authors&id="+universityID);
 			BufferedReader in = new BufferedReader(
-			new InputStreamReader(oracle.openStream()));
+			new InputStreamReader(linkURL.openStream()));
 
 			// ONE PAGE, READ LINE BY LINE
 			while ((inputLine = in.readLine()) != null) {
@@ -50,13 +52,23 @@ public class GetLecturerDataOnSINTA {
 	        		// NAMA DOSEN
 	           		startIndex = inputLine.indexOf("blue") + 6;
 	        		endIndex = inputLine.indexOf("</a>");
-	        		newLecturer.setNamaDosen(inputLine.substring(startIndex, endIndex).trim());
+	        		tempString = inputLine.substring(startIndex, endIndex).trim();
+	        		// CLEAN BROKEN DATA
+	        		if(tempString.contains(",")) {
+	        			tempString = tempString.substring(0, tempString.indexOf(","));
+	        		}
+	        		newLecturer.setNamaDosen(tempString);
 	        	}
 	        	if(inputLine.contains("<dd>NIDN <small>/NIP/NIDK</small>")) {
 	        		// NIDN / NIP / NIDK
 	        		startIndex = inputLine.indexOf("/small") + 10;
 	        		endIndex = inputLine.indexOf("</dd>");
-	        		newLecturer.setNidnDosen(inputLine.substring(startIndex, endIndex).trim());	        		
+	        		tempString = inputLine.substring(startIndex, endIndex).trim();
+	        		// CLEAN BROKEN DATA
+	        		if(tempString.contains(",")) {
+	        			tempString = tempString.substring(0, tempString.indexOf(","));
+	        		}
+	        		newLecturer.setNidnDosen(tempString);        		
 	        	}
 	        	if(inputLine.contains("H-Index")) {
 	        		// SCOPUS H-INDEX
@@ -71,18 +83,18 @@ public class GetLecturerDataOnSINTA {
 		        		endIndex = inputLine.indexOf("<", startIndex+1);
 		        		newLecturer.setGoogleHIndex(inputLine.substring(startIndex, endIndex).trim());		        		
 		        	}
-	        	}
-	        	
+	        	}	        	
 	        	if(inputLine.contains("/assets/img/scholar_logo.png")) {
 		        	// COMBINE AND STORE RESULT
 	        		finalResult += newLecturer.getIdSinta() + ";";
-	        		finalResult += newLecturer.getNamaDosen() + ";";
 	        		finalResult += newLecturer.getNidnDosen() + ";";
+	        		finalResult += newLecturer.getNamaDosen() + ";";
 	        		finalResult += newLecturer.getScopusHIndex() + ";";
 	        		finalResult += newLecturer.getGoogleHIndex();
+
 	        		System.out.println(finalResult);
 	        		fw.write(finalResult + "\n");
-	        	}	       	
+	        	}
 	        }
 	        in.close();
 	        
@@ -91,7 +103,7 @@ public class GetLecturerDataOnSINTA {
 	        	break;
 	        }
 	        else {
-		        pageNumber++;	        	
+		        startPage++;	        	
 	        }
 		}
 	}
