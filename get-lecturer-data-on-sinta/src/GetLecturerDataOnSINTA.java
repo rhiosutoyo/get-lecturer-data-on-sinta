@@ -14,7 +14,7 @@ public class GetLecturerDataOnSINTA {
 		year = cal.get(Calendar.YEAR); 						// 2016
 		FileWriter fw = new FileWriter("output_v1-"+ dayOfMonth + "-" + month + "-" + year  +".csv");
 
-		// NECESSARY VARIABLES
+		// NECESSARY VARIABLES 
 		boolean isAvailable = true;
 		int startIndex = 0, endIndex = 0, pageNumber = 1;
 		String inputLine = null, finalResult = null;

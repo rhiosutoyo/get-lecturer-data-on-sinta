@@ -3,7 +3,7 @@ public class LecturerDataModel {
 	private String namaDosen;
 	private String nidnDosen;
 	private String scopusHIndex;
-	private String googleHIndex;
+	private String googleHIndex; 
 
 	public String getIdSinta() {
 		return idSinta;
