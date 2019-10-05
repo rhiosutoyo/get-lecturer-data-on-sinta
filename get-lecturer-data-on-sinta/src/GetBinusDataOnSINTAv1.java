@@ -87,7 +87,7 @@ public class GetBinusDataOnSINTAv1 {
 	        	if(inputLine.contains("/assets/img/scholar_logo.png")) {
 		        	// PRINT RESULT
 	        		System.out.println(result);
-	            	fw.write(result+"\n" ); 
+	            	fw.write(result+"\n"); 
 	        	}
 //	        	if(inputLine.contains("Overall Score")) {
 //	        		// Overall Score
