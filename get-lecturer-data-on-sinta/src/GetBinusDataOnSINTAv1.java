@@ -18,12 +18,12 @@ public class GetBinusDataOnSINTAv1 {
 		String result = null;
 		int startIndex;
 		int endIndex;
-		int startPage = 1;
 		int count = 0;
 		boolean flag = true;
-    	int n = 0;								// helper
+//    	int n = 0;								// helper
 
     	// FILL THIS
+		int pageNumber = 1;
     	int univ_sinta_id = 388;
     	
 		System.out.print("===================================================="
@@ -31,17 +31,20 @@ public class GetBinusDataOnSINTAv1 {
 						+ "====================================================\n");
 		
 		// NAMA KOLOM
-		String kolom = new String("NO;ID SINTA;NAMA DOSEN;NIDN/NIP/NIDK;SCOPUS H-INDEX;GOOGLE H-INDEX;OVERALL SCORE;");
+//		String kolom = new String("NO;ID SINTA;NAMA DOSEN;NIDN/NIP/NIDK;SCOPUS H-INDEX;GOOGLE H-INDEX;OVERALL SCORE;");
+		String kolom = new String("NO;ID SINTA;NAMA DOSEN;NIDN/NIP/NIDK;SCOPUS H-INDEX;GOOGLE H-INDEX");
 		System.out.println(kolom);
     	fw.write(kolom+"\n");
 		
 		while(flag == true) {
 			flag = false;
-			URL oracle = new URL("http://sinta2.ristekdikti.go.id/affiliations/detail?page="+startPage+"&view=authors&id="+univ_sinta_id);
+			URL oracle = new URL("http://sinta2.ristekdikti.go.id/affiliations/detail?page="+pageNumber+"&view=authors&id="+univ_sinta_id);
 			BufferedReader in = new BufferedReader(
 			new InputStreamReader(oracle.openStream()));
-	        while ((inputLine = in.readLine()) != null) {
-	        	if(inputLine.contains("authors/detail")) {
+
+			// ONE WEBSITE, READ LINE BY LINE
+			while ((inputLine = in.readLine()) != null) {
+        		if(inputLine.contains("authors/detail")) {
 	        		// SELAMA MASIH KETEMU AUTHORS MAKA AKAN JALAN TERUS
 	        		flag = true;
 	        		
@@ -57,14 +60,14 @@ public class GetBinusDataOnSINTAv1 {
 	           		startIndex = inputLine.indexOf("blue") + 6;
 	        		endIndex = inputLine.indexOf("</a>");
 	        		result += inputLine.substring(startIndex, endIndex).trim() + ";";
-//        			System.out.println(inputLine.substring(startIndex, endIndex));	        	
+//	        		System.out.println(inputLine.substring(startIndex, endIndex));	        	
 	        	}
 	        	if(inputLine.contains("<dd>NIDN <small>/NIP/NIDK</small>")) {
 	        		// NIDN / NIP / NIDK
 	        		startIndex = inputLine.indexOf("/small") + 10;
 	        		endIndex = inputLine.indexOf("</dd>");
 	        		result += inputLine.substring(startIndex, endIndex).trim() + ";";
-//	       			System.out.println(inputLine.substring(startIndex, endIndex));
+//		       		System.out.println(inputLine.substring(startIndex, endIndex));
 	        	}
 	        	if(inputLine.contains("H-Index")) {
 	        		// SCOPUS H-INDEX
@@ -77,32 +80,30 @@ public class GetBinusDataOnSINTAv1 {
 		        	if(inputLine.contains("green")) {
 		        		startIndex = inputLine.indexOf("green\">") + 7;
 		        		endIndex = inputLine.indexOf("<", startIndex+1);
-		        		result += inputLine.substring(startIndex, endIndex).trim() + ";";	        		
+		        		result += inputLine.substring(startIndex, endIndex).trim();// + ";";	        		
 		        	}
 	        	}
-	        	if(inputLine.contains("Overall Score")) {
-	        		n++;
-	        		// Overall Score
-	        		startIndex = 36;
-	        		endIndex = inputLine.indexOf(" ", startIndex+1);
-	        		result += inputLine.substring(startIndex, endIndex).trim() + ";";
-	            	
-	        		if(n % 2 == 1) {
-		        		// PRINT RESULT
-		        		System.out.println(result);
-		            	fw.write(result+"\n");
-	        		}
-	        	}	        	
+	        	
+	        	if(inputLine.contains("/assets/img/scholar_logo.png")) {
+		        	// PRINT RESULT
+	        		System.out.println(result);
+	            	fw.write(result+"\n");
+	        	}
+//	        	if(inputLine.contains("Overall Score")) {
+//	        		// Overall Score
+//	        		startIndex = 36;
+//	        		endIndex = inputLine.indexOf(" ", startIndex+1);
+//	        		result += inputLine.substring(startIndex, endIndex).trim() + ";";
+//	        	}	        	       	
 	        }
 	        in.close();
 	        if(flag == false) {
 	    		System.out.print("====================================================\nEND OF AVAILABLE PAGE\n====================================================\n");	        	
 	        	break;
 	        }
-	        startPage++;
+	        pageNumber++;
 		}
-		System.out.print("====================================================\nEND CRAWLING\n====================================================\n");
-        
+		System.out.print("====================================================\nEND CRAWLING\n====================================================\n");        
 		fw.close();
 	}
 }
