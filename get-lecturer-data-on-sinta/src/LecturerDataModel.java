@@ -1,3 +1,4 @@
+// the model for the lecturer data model
 public class LecturerDataModel {
 	private String idSinta;
 	private String nidnDosen;
